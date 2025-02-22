@@ -1,0 +1,27 @@
+PUT http://localhost:6000/api/apparel/update
+Content-Type: application/json
+
+{
+  "name": "Clothes",
+  "totalQuantity": 50,
+  "variants": []
+}
+
+###
+POST http://localhost:6000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "olamides@gmail.com",
+  "password": "password",
+  "name": "Olamides"
+}
+
+###
+POST http://localhost:6000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "olamides@gmail.com",
+  "password": "password"
+}
