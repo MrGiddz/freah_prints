@@ -1,4 +1,4 @@
-import { Base, Document } from "../db/config/base-model";
+import { Base, Document } from "../data/config/base-model";
 import bcrypt from "bcrypt";
 
 export interface AuthInfo {
@@ -52,7 +52,9 @@ export class User extends Base<UserInt> {
     return {
       ...user,
       comparePassword: async function (password: string): Promise<boolean> {
-        return bcrypt.compare(password, this.password);
+        const isMatch = await bcrypt.compare(password, this.password);
+        console.log({ isMatch, password });
+        return isMatch;
       },
       setPasswordResetToken: async function (
         token: string,

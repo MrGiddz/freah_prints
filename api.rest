@@ -1,11 +1,73 @@
 PUT http://localhost:6000/api/apparel/update
 Content-Type: application/json
+x-vendor-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjUwMjU3LCJleHAiOjE3NDAyNTM4NTd9.lQ2IzTLMF_4h-t7-pbvGeYFIHzLwGExUoPeBmfg_CKA
 
 {
-  "name": "Clothes",
-  "totalQuantity": 50,
-  "variants": []
+  "code": "SHO-77340-9622",
+  "name": "New Apparel Name",
+  "variants": [
+    {
+      "sizeId": "XL-609140-22C9",
+      "size": "Medium"
+    }
+  ]
 }
+
+###
+POST http://localhost:6000/api/apparel/add
+Content-Type: application/json
+X-Vendor-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjM2NTk1LCJleHAiOjE3NDAyNDAxOTV9.FyINm6wl7-kmNrfRR8ayaOV2hzVmpU22XeOYkH5uhr4
+
+{
+  "name": "Shoes",
+  "totalQuantity": 50,
+  "variants": [
+    {
+      "size": "XL", 
+      "quantity": 10,
+      "price": 100.99
+    }
+  ]
+}
+
+###
+GET http://localhost:6000/api/apparel
+Content-Type: application/json
+X-Vendor-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjM2NTk1LCJleHAiOjE3NDAyNDAxOTV9.FyINm6wl7-kmNrfRR8ayaOV2hzVmpU22XeOYkH5uhr4
+
+###
+GET http://localhost:6000/api/apparel/SHO-09140-7A69
+Content-Type: application/json
+X-Vendor-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjM2NTk1LCJleHAiOjE3NDAyNDAxOTV9.FyINm6wl7-kmNrfRR8ayaOV2hzVmpU22XeOYkH5uhr4
+
+###
+POST http://localhost:6000/api/order/create-single-order
+Content-Type: application/json
+X-Vendor-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjM2NTk1LCJleHAiOjE3NDAyNDAxOTV9.FyINm6wl7-kmNrfRR8ayaOV2hzVmpU22XeOYkH5uhr4
+
+{
+  "customerName": "Olaniyi Gideon Olamide",
+  "items": [
+    {
+      "apparelCode": "SHO-09140-7A69", 
+      "sizeId": "XL-609140-22C9",
+      "quantity": 10,
+      "vendorId": "017de000-aa7f-4a36-bb12-4485e534d467"
+    }
+  ]
+}
+
+###
+GET http://localhost:6000/api/vendor/orders
+Content-Type: application/json
+X-Vendor-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjcxNTMxLCJleHAiOjE3NDAyNzUxMzF9.Jkm7TP4XpeKSKXG3fJPY_oM6V0ahCRS5rzBMzH9bYEs
+
+
+###
+GET http://localhost:6000/api/vendor/can-fulfil-order
+Content-Type: application/json
+X-Vendor-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxN2RlMDAwLWFhN2YtNGEzNi1iYjEyLTQ0ODVlNTM0ZDQ2NyIsImVtYWlsIjoib2xhbWlkZXNAZ21haWwuY29tIiwiaWF0IjoxNzQwMjcxNTMxLCJleHAiOjE3NDAyNzUxMzF9.Jkm7TP4XpeKSKXG3fJPY_oM6V0ahCRS5rzBMzH9bYEs
+
 
 ###
 POST http://localhost:6000/api/auth/register
@@ -15,6 +77,15 @@ Content-Type: application/json
   "email": "olamides@gmail.com",
   "password": "password",
   "name": "Olamides"
+}
+
+###
+POST http://localhost:6000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "olamides@gmail.com",
+  "password": "password"
 }
 
 ###

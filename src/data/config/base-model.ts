@@ -20,6 +20,7 @@ export abstract class Base<T extends { id?: string; [key: string]: any }> {
   private filePath: string;
   private index: Map<string, T>; // Index for quick lookups
   private uniqueFields: string[];
+  private fileName: string;
 
   /**
    * Initializes a new instance of the Base class.
@@ -27,8 +28,9 @@ export abstract class Base<T extends { id?: string; [key: string]: any }> {
    * @param uniqueFields - Fields that must be unique across records.
    */
   constructor(filename: string, uniqueFields: string[] = []) {
-    this.filePath = path.join(__dirname, `./${filename}.json`);
+    this.filePath = path.join(__dirname, `../db/${filename}.json`);
     this.index = new Map();
+    this.fileName = filename
     this.uniqueFields = uniqueFields;
     this.ensureFileExists();
     this.buildIndex();
@@ -98,10 +100,12 @@ export abstract class Base<T extends { id?: string; [key: string]: any }> {
    */
   public create(data: T): Promise<Document<T>> {
     return new Promise((resolve, reject) => {
-      const checkFields = Object.keys(data);
-      if (this.isUniqueViolation(data, checkFields)) {
-        logger.error("Error: Unique field constraint violated.");
-        return reject("Error: Unique field constraint violated.");
+
+      const violationMessage = this.isUniqueViolation(data);
+
+      if (violationMessage) {
+        logger.error(`Error: ${violationMessage}`);
+        return reject(violationMessage);
       }
 
       const records = this.readData();
@@ -114,6 +118,7 @@ export abstract class Base<T extends { id?: string; [key: string]: any }> {
       };
       records.push(newRecord);
       this.writeData(records);
+      console.log({newRecord})
       resolve(newRecord);
     });
   }
@@ -162,17 +167,20 @@ export abstract class Base<T extends { id?: string; [key: string]: any }> {
   }
 
   /**
-   * Checks if unique field constraints are violated.
+   * Checks if unique field constraints are violated and logs details.
    */
-  private isUniqueViolation(
-    data: T,
-    fieldsToCheck: string[] = this.uniqueFields
-  ): boolean {
-    if (fieldsToCheck.length === 0) return false;
+  private isUniqueViolation(data: T): string | null {
+    if (this.uniqueFields.length === 0) return null;
     const records = this.readData();
-    return records.some((record) =>
-      fieldsToCheck.some((field) => record[field] === data[field])
-    );
+
+    for (const record of records) {
+      for (const field of this.uniqueFields) {
+        if (record[field] === data[field]) {
+          return `Unique constraint violated on '${this.fileName}' and on field '${field}' with value '${data[field]}'`;
+        }
+      }
+    }
+    return null;
   }
 
   /**
@@ -193,16 +201,20 @@ export abstract class Base<T extends { id?: string; [key: string]: any }> {
       );
 
       if (index !== -1) {
+        const existingRecord = records[index];
+
+        // Merge the updates while preserving the original unique identifier
         const updatedRecord = {
-          ...records[index],
+          ...existingRecord,
           ...updateData,
           updatedAt: new Date().toISOString(),
         };
 
-        const checkFields = Object.keys(updateData);
-        if (this.isUniqueViolation(updatedRecord, checkFields)) {
-          logger.error("Error: Unique field constraint violated.");
-          return reject("Error: Unique field constraint violated.");
+        // Ignore uniqueness check for the same record being updated
+        const violationMessage = this.isUniqueViolation(updatedRecord);
+        if (violationMessage && existingRecord.code !== updatedRecord.code) {
+          logger.error(`Error: ${violationMessage}`);
+          return reject(violationMessage);
         }
 
         records[index] = updatedRecord;
