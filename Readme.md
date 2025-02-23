@@ -29,7 +29,7 @@ yarn # or npm install
 ```
 
 ### Environment Variables
-Create a `.env` file in the root directory and configure the necessary environment variables:
+Using the `.env.tamplate`, Create a `.env` file in the root directory and configure the necessary environment variables:
 ```
 PORT=5000
 ENCRYPTION_KEY=your_secret_key
